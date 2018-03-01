@@ -36,3 +36,4 @@ module.exports = function check(str, bracketsConfig) {
 }
 
 check('[]()', [['(', ')'], ['[', ']']]); // -> true
+
