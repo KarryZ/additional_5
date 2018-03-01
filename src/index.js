@@ -1,39 +1,38 @@
-//module.exports = 
-    function check(str, bracketsConfig) {
-        // your solution
-        let arr = str.split("");
-        if (arr.length % 2 !== 0) return false;
-        let lastOpen, nextClosed;
+module.exports = function check(str, bracketsConfig) {
+    let arr = str.split('');
 
-        
-            
-             book:   for (let i = 0; i < arr.length; i++) {
-                    for (let j = 0; j < bracketsConfig.length; j++) {
-                        let configEl = bracketsConfig[j][0];
-                        if (arr[i] == bracketsConfig[j][0]) {
-                            lastOpen = arr[i];
-                            nextClosed = arr[i + 1];
-                            if (lastOpen !== nextClosed) {
-                                
-                                if (nextClosed == bracketsConfig[j][1]) {
-                                    arr.splice(i, 2);
-                                    continue book;
-                                }
-                            }
-                        }
-                    }
-                    if (arr.length !== 0) continue book;
-                }
-               
-            
-       
-        if (arr.length == 0){
-            console.log(true); 
-            return true;
-        }else{
-            console.log(false); 
-            return false;
-        } 
-        
+    function getConfigByOpeningElement(element) {
+        return bracketsConfig.find(x => x[0] == element);
     }
-    check('[]()', [['(', ')'], ['[', ']']]); // -> true
+    
+    let element, currentElementConfig, lastElementConfig;
+    let stack = [];
+    let result = true;
+    
+    for (let i = 0; i < arr.length; i++) {
+        let element = arr[i];
+        currentElementConfig = getConfigByOpeningElement(element);
+        if (stack.length > 0) {
+            lastElementConfig = getConfigByOpeningElement(stack[stack.length - 1]);
+            if (element == lastElementConfig[1]) {
+                stack.pop();
+            }
+            else if (currentElementConfig) {
+                stack.push(element);
+            }
+            else {
+                return false;
+            }
+        } else {
+            if (currentElementConfig) {
+                stack.push(element);
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    return stack.length === 0;
+}
+
+check('[]()', [['(', ')'], ['[', ']']]); // -> true
